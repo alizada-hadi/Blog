@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    {% for blog in blogs %}
+        <div>
+            <h3>{{ blog.title }}</h3>
+
+            {% if blog.image %}
+                <img src="{% static 'images/default.png' %}" alt="image">
+            {% endif %}
+            <p class="my-3">{{ blog.content }}</p>
+
+            <small class="text-muted">
+                Posted {{ blog.created_at|timesince }} ago
+            </small>
+
+            <div class="row mt-2">
+                <div class="col-4">
+                    <button class="btn btn-secondary">like</button>
+                    <button class="btn btn-secondary">comment</button>
+                    <button class="btn btn-secondary">share</button>
+                </div>
+                
+            </div>
+        </div>
+    {% endfor %}
+{% endblock content %}
