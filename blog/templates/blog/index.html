@@ -4,12 +4,16 @@
 {% block content %}
     {% for blog in blogs %}
         <div>
-            <h3>{{ blog.title }}</h3>
+            <a href="{% url 'post-update' blog.id %}">Update Post</a>
+            <h3>
+                <a href="{% url 'post-detail' blog.id %}" class="link-primary stretched-link">{{ blog.title }}</a>  
+                
+            </h3>
 
             {% if blog.image %}
-                <img src="{% static 'images/default.png' %}" alt="image">
+                <img src="{{ blog.image.url }}" alt="image" class="img-fluid">
             {% endif %}
-            <p class="my-3">{{ blog.content }}</p>
+            <p class="my-3">{{ blog.content|safe|truncatewords:"50"|linebreaks }}</p>
 
             <small class="text-muted">
                 Posted {{ blog.created_at|timesince }} ago
@@ -24,5 +28,8 @@
                 
             </div>
         </div>
+        <hr>
+        {% empty %}
+        <p class="alert alert-info text-center">There are not post on the database</p>
     {% endfor %}
 {% endblock content %}

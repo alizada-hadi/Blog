@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div>
+        <a href="/" class="btn btn-outline-secondary mb-2">Go Back</a>
+        <h3>
+            {{ post.title }}
+        </h3>
+        {% if post.image %}
+        <img src="{{ post.image.url }}" alt="image" class="img-fluid">
+        {% endif %}
+        <p class="my-3">{{ post.content }}</p>
+    
+        <small class="text-muted">
+            Posted {{ post.created_at|timesince }} ago
+        </small>
+    
+        <div class="row mt-2">
+            <div class="col-4">
+                <button class="btn btn-secondary">like</button>
+                <button class="btn btn-secondary">share</button>
+            </div>
+        </div>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="input-group mb-3">
+                <input type="text" class="form-control mt-2" placeholder="Leave a comment" aria-label="Recipient's username"
+                    aria-describedby="basic-addon2">
+                <div class="input-group-append mt-2">
+                    <button class="btn btn-outline-info" type="button">Comment</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock content %}
