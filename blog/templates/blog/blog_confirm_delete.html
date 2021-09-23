@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <p class="alert alert-danger text-center" style="font-size: 20px;">Are you sure you want to delete the post?</p>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <a href="/" class="btn btn-outline-secondary mt-2">No</a>
+        <button class="btn btn-outline-danger" type="submit">Yes</button>
+    </form>
+{% endblock content %}

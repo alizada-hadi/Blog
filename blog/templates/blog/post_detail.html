@@ -3,16 +3,18 @@
 {% block content %}
     <div>
         <a href="/" class="btn btn-outline-secondary mb-2">Go Back</a>
+        <a href="{% url 'post-update' object.slug %}" class="btn btn-outline-primary mb-2">Update Post</a>
+        <a href="{% url 'post-delete' object.slug %}" class="btn btn-outline-danger mb-2">Delete Post</a>
         <h3>
-            {{ post.title }}
+            {{ object.title }}
         </h3>
-        {% if post.image %}
-        <img src="{{ post.image.url }}" alt="image" class="img-fluid">
+        {% if object.image %}
+        <img src="{{ object.image.url }}" alt="image" class="img-fluid">
         {% endif %}
-        <p class="my-3">{{ post.content }}</p>
+        <p class="my-3">{{ object.body }}</p>
     
         <small class="text-muted">
-            Posted {{ post.created_at|timesince }} ago
+            Posted {{ object.created|timesince }} ago
         </small>
     
         <div class="row mt-2">

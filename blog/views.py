@@ -1,47 +1,68 @@
+from django.db import models
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from .models import Blog
 from .forms import BlogForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 
-def index(request):
-    blogs = Blog.objects.all()
-    context = {
-        "title": "Index",
-        "blogs": blogs
-    }
-    return render(request, "blog/index.html", context)
+from django.views import generic
 
 
-@login_required
-def create_post(request):
-    user = request.user
-    if request.method == 'POST':
-        title = request.POST.get('title')
-        content = request.POST.get('content')
-        image = request.FILES.get('image')
-        Blog.objects.create(owner=user, title=title,
-                            content=content, image=image)
-    return render(request, "blog/create_post.html")
+class PostListView(generic.ListView):
+    queryset = Blog.objects.filter(status='published')
+    template_name = "blog/index.html"
+    context_object_name = "blogs"
 
 
-def post_detail(request, pk):
-    post = Blog.objects.get(pk=pk)
-    context = {
-        "post": post
-    }
-    return render(request, 'blog/post_detail.html', context)
+class PostDetailView(generic.DetailView):
+    model = Blog
+    template_name = "blog/post_detail.html"
 
 
-def post_update(request, pk):
-    obj = Blog.objects.get(pk=pk)
+class PostCreateView(LoginRequiredMixin, generic.CreateView):
+    template_name = "blog/create_post.html"
+    model = Blog
+    fields = [
+        'title',
+        'image',
+        'body',
+        'status'
+    ]
 
-    if request.method == "POST":
-        form = BlogForm(request.POST, request.FILES, instance=obj)
-        if form.is_valid:
-            form.save()
-    else:
-        form = BlogForm()
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
-    return render(request, "blog/post_update.html", {"form": form})
+
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
+    template_name = "blog/post_update.html"
+    model = Blog
+    fields = [
+        'title',
+        'image',
+        'body',
+        'status'
+    ]
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        blog = self.get_object()
+        if self.request.user == blog.author:
+            return True
+        return False
+
+
+class BlogDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
+    model = Blog
+    success_url = '/'
+
+    def test_func(self):
+        blog = self.get_object()
+        if self.request.user == blog.author:
+            return True
+        return False

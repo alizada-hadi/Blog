@@ -4,6 +4,6 @@ from .models import Blog
 
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):
-    list_display = ('title', 'content', 'created_at', 'updated_at', )
-    list_filter = ('title', 'content', )
-    search_fields = ('title',  'content',)
+    list_display = ('title', 'body', 'created', 'updated', )
+    list_filter = ('title', 'body', )
+    search_fields = ('title',  'body',)
