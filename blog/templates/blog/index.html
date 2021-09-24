@@ -4,6 +4,14 @@
 {% block content %}
     {% for blog in blogs %}
         <div>
+            <div class="row">
+                <div class="col-lg-1">
+                    <img src="{{ blog.author.profile.image.url }}" alt="" style="width: 80px; height: 80px; border-radius: 50%;">
+                </div>
+                <div class="col-lg-11">
+                    <h4 style="position: relative; left: 25px;">{{ blog.author.profile.first_name }} - {{ blog.author.profile.last_name }} </h4>
+                </div>
+            </div>
             <h3>
                 <a href="{% url 'post-detail' blog.slug %}">
                     {{ blog.title }}  
