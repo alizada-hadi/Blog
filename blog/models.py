@@ -32,6 +32,8 @@ class Blog(models.Model):
                               choices=STATUS_CHOICES,
                               default='draft')
 
+    likes = models.ManyToManyField(User, default=None, blank=True)
+
     class Meta:
         ordering = ('-publish',)
 
@@ -45,3 +47,24 @@ class Blog(models.Model):
 
     def get_absolute_url(self):
         return reverse('post-detail', kwargs={'slug': self.slug})
+
+    @property
+    def number_of_likes(self):
+        return self.likes.count()
+
+
+LIKE_CHOICES = (
+    ('Like', 'Like'),
+    ('Unlike', 'Unlike')
+)
+
+
+class Like(models.Model):
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Blog, on_delete=models.CASCADE)
+    value = models.CharField(choices=LIKE_CHOICES,
+                             default='Unlike', max_length=20)
+
+    def __str__(self):
+        return 'f{self.user}\'s like'

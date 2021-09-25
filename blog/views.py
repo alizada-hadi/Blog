@@ -1,12 +1,13 @@
 from django.db import models
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse
 from .models import Blog
 from .forms import BlogForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-
-
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from .models import Like
 from django.views import generic
 
 
@@ -66,3 +67,24 @@ class BlogDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView
         if self.request.user == blog.author:
             return True
         return False
+
+
+def like_post(request):
+    user = request.user
+
+    if request.method == "POST":
+        post_id = request.POST.get('post_id')
+        post_obj = Blog.objects.get(id=post_id)
+        if user in post_obj.likes.all():
+            post_obj.likes.remove(user)
+        else:
+            post_obj.likes.add(user)
+
+        like, created = Like.objects.get_or_create(user=user, post_id=post_id)
+        if not created:
+            if like.value == 'Like':
+                like.value = 'Unlike'
+            else:
+                like.value = 'Like'
+        like.save()
+    return redirect('post-list')

@@ -28,9 +28,18 @@
 
             <div class="row mt-2">
                 <div class="col-4">
-                    <button class="btn btn-secondary">like</button>
-                    <button class="btn btn-secondary">comment</button>
-                    <button class="btn btn-secondary">share</button>
+
+                    <form action="{% url 'like-post' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="post_id" value={{blog.id}}>
+                        {% if user not in blog.likes.all %}
+                            <button class="btn btn-info" type="submit">Like</button>
+                        {% else %}
+                            <button class="btn btn-danger" type="submit">Unlike</button>
+                        {% endif %}
+                    </form>
+                    
+                    <button class="btn btn-default"><i class="fa fa-thumbs-up" aria-hidden="true"></i> <span class="mx-2" style="font-size: 19px;">{{ blog.number_of_likes }}</span> </button>
                 </div>
                 
             </div>
