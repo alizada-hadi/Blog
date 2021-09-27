@@ -29,17 +29,19 @@
             <div class="row mt-2">
                 <div class="col-4">
 
-                    <form action="{% url 'like-post' %}" method="POST">
+                    <form action="{% url 'like-post' %}" method="POST" class="like-form" id="{{blog.id}}">
                         {% csrf_token %}
                         <input type="hidden" name="post_id" value={{blog.id}}>
-                        {% if user not in blog.likes.all %}
-                            <button class="btn btn-info" type="submit">Like</button>
-                        {% else %}
-                            <button class="btn btn-danger" type="submit">Unlike</button>
-                        {% endif %}
+                        <button class="btn btn-info like-btn{{blog.id}}" type="submit" >
+                                {% if user not in blog.likes.all %}
+                                    Like
+                                {% else %}
+                                    Unlike
+                                {% endif %}
+                            </button>
                     </form>
                     
-                    <button class="btn btn-default"><i class="fa fa-thumbs-up" aria-hidden="true"></i> <span class="mx-2" style="font-size: 19px;">{{ blog.number_of_likes }}</span> </button>
+                    <button class="btn btn-default"><i class="fa fa-thumbs-up" aria-hidden="true"></i> <span class="mx-2 like-count{{blog.id}}" style="font-size: 19px;">{{ blog.number_of_likes }}</span> </button>
                 </div>
                 
             </div>
@@ -48,4 +50,13 @@
         {% empty %}
         <p class="alert alert-info text-center">There are not post on the database</p>
     {% endfor %}
+
+
+
+    {% block script %}
+    <script>
+        
+    </script>
+    
+    {% endblock script %}
 {% endblock content %}
