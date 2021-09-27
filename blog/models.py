@@ -68,3 +68,18 @@ class Like(models.Model):
 
     def __str__(self):
         return 'f{self.user}\'s like'
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(
+        Blog, on_delete=models.CASCADE,  related_name="comments")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.CharField(max_length=500)
+    created_at = models.DateTimeField(auto_now_add=True)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ('created_at',)
+
+    def __str__(self):
+        return f'Commented by {self.user.profile.first_name} on {self.post} post'

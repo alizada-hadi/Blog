@@ -1,14 +1,16 @@
 from django.db import models
 from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse
-from .models import Blog
-from .forms import BlogForm
+from .models import Blog, Comment
+from .forms import BlogForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from .models import Like
 from django.views import generic
+
+from django.views.generic.edit import FormMixin
 
 
 class PostListView(generic.ListView):
@@ -17,9 +19,32 @@ class PostListView(generic.ListView):
     context_object_name = "blogs"
 
 
-class PostDetailView(generic.DetailView):
+class PostDetailView(FormMixin, generic.DetailView):
     model = Blog
     template_name = "blog/post_detail.html"
+    form_class = CommentForm
+
+    def get_success_url(self):
+        return reverse("post-detail", kwargs={"slug": self.object.slug})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = self.get_form()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid()
+
+    def form_valid(self, form):
+        form.instance.post = self.object
+        form.instance.user = self.request.user
+        form.save()
+        return super().form_valid(form)
 
 
 class PostCreateView(LoginRequiredMixin, generic.CreateView):
@@ -88,3 +113,17 @@ def like_post(request):
                 like.value = 'Like'
         like.save()
     return redirect('post-list')
+
+
+class CreateComment(LoginRequiredMixin,  generic.CreateView):
+    template_name = "blog/post_detail.html"
+
+    model = Comment
+    fields = [
+        'post',
+        'comment'
+    ]
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
