@@ -21,11 +21,11 @@ $(document).ready(() => {
             success : function(response){
                 if(trim === 'Unlike'){
                     $(`.like-btn${post_id}`).text('Like')
-                    result = trimCount - 1
+                    result = trimCount - 1 
                 }
                 else{
                     $(`.like-btn${post_id}`).text('Unlike')
-                    result = trimCount + 1
+                    result = trimCount + 1 
                 }
                 $(`.like-count${post_id}`).text(result)
             },

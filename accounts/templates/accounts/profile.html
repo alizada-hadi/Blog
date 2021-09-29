@@ -20,9 +20,14 @@
             {% csrf_token %}
             {{ u_form|crispy }}
             {{ p_form|crispy }}
-
             <button type="submit" class="btn btn-outline-info mt-2">Update</button>
         </form>
+
+        <hr>
+
+        <h3 class="mt-2">Notifications</h3>
+
+        
 
     </div>
 {% endblock content %}

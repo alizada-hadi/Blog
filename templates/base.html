@@ -1,3 +1,4 @@
+{% load blog_tags %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -16,13 +17,15 @@
         integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
         crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
-    <title>Blog - {{ title }}</title>
+    <title>Blog Post</title>
 </head>
 <body>
 
     <nav class="navbar navbar-expand-sm navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="/">BPost</a>
+            <a class="navbar-brand" href="/">
+                <img src="{% static 'images/logo.jpg' %}" alt="" style="width: 40px; height: 40px; border-radius: 50%;">
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -31,24 +34,26 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'post-create' %}">Create Blog</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'post-create' %}">
+                            <i class="fa fa-plus" style="font-size: larger; position: relative; top: 5px;" aria-hidden="true"></i>
+                        </a>
                     </li>
                     {% endif %}
                 </ul>
-
+<!-- <i class="fa fa-sign-out" aria-hidden="true"></i> -->
                 <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
                     {% if user.is_authenticated %}
                         <li class="nav-item">
                             <a href="{% url 'profile' %}" class="nav-link"><img src="{{ user.profile.image.url }}" alt="" style="width: 30px; height: 30px; border-radius: 50%;"></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{% url 'profile' %}">Profile</a>
+                            <a class="nav-link active" aria-current="page" href="/"><i class="fa fa-bell" style="font-size: larger; position: relative; top: 5px;" aria-hidden="true"></i></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{% url 'logout' %}">Logout</a>
+                            <a class="nav-link active" aria-current="page" href="{% url 'logout' %}"><i class="fa fa-sign-out"
+                                    style="font-size: larger; position: relative; top: 5px;" aria-hidden="true"></i></a>
                         </li>
                     {% else %}
                         <li class="nav-item">
